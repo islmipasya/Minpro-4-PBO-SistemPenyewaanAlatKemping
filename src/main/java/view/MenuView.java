@@ -4,6 +4,8 @@ import controller.PenyewaanController;
 import model.AlatKemping;
 import model.Tenda;
 import model.AlatMasak;
+import model.Penyewa;
+import model.Sewa;
 
 import java.util.Scanner;
 
@@ -15,15 +17,16 @@ public class MenuView {
         input = new Scanner(System.in);
     }
 
-    public void jalankan(
-            PenyewaanController controller) {
+    public void jalankan(PenyewaanController controller) {
 
         int pilihan;
 
         do {
-            System.out.println("\n==================================");
-            System.out.println("   SISTEM PENYEWAAN ALAT CAMPING");
-            System.out.println("==================================");
+
+            System.out.println();
+            System.out.println("======================================");
+            System.out.println("     SISTEM PENYEWAAN ALAT CAMPING");
+            System.out.println("======================================");
             System.out.println("1. Kelola Alat Camping");
             System.out.println("2. Kelola Penyewa");
             System.out.println("3. Kelola Sewa");
@@ -50,23 +53,23 @@ public class MenuView {
                     break;
 
                 default:
-                    System.out.println("Pilihan tidak tersedia.");
+                    System.out.println("Menu tidak tersedia.");
             }
 
         } while (pilihan != 0);
     }
 
-    // =========================
-    // MENU ALAT
-    // =========================
 
-    private void menuAlat(
-            PenyewaanController controller) {
+// MENU ALAT
+
+    private void menuAlat(PenyewaanController controller) {
 
         int pilihan;
 
         do {
-            System.out.println("\n=== MENU ALAT CAMPING ===");
+
+            System.out.println();
+            System.out.println("=== MENU ALAT CAMPING ===");
             System.out.println("1. Tambah Alat");
             System.out.println("2. Lihat Alat");
             System.out.println("3. Ubah Alat");
@@ -97,25 +100,20 @@ public class MenuView {
                     break;
 
                 default:
-                    System.out.println("Pilihan tidak tersedia.");
+                    System.out.println("Menu tidak tersedia.");
             }
 
         } while (pilihan != 0);
     }
 
-    private void tambahAlat(
-            PenyewaanController controller) {
+    private void tambahAlat(PenyewaanController controller) {
 
-        System.out.println("\n=== TAMBAH ALAT ===");
+        System.out.println();
+        System.out.println("=== TAMBAH ALAT ===");
         System.out.println("1. Tenda");
         System.out.println("2. Alat Masak");
 
         int jenis = inputInt("Pilih jenis alat: ");
-
-        if (jenis != 1 && jenis != 2) {
-            System.out.println("Jenis alat tidak tersedia.");
-            return;
-        }
 
         String nama = inputString("Nama alat: ");
         double harga = inputDouble("Harga sewa: ");
@@ -133,48 +131,61 @@ public class MenuView {
                     kapasitas
             );
 
-        } else {
+            System.out.println(
+                    "Data alat berhasil ditambahkan."
+            );
 
-            String bahan =
+        } else if (jenis == 2) {
+
+            String bahanBakar =
                     inputString("Jenis bahan bakar: ");
 
             controller.tambahAlatMasak(
                     nama,
                     harga,
                     stok,
-                    bahan
+                    bahanBakar
+            );
+
+            System.out.println(
+                    "Data alat berhasil ditambahkan."
+            );
+
+        } else {
+
+            System.out.println(
+                    "Jenis alat tidak tersedia."
             );
         }
-
-        System.out.println("Data alat berhasil ditambahkan.");
     }
 
-    private void lihatAlat(
-            PenyewaanController controller) {
+    private void lihatAlat(PenyewaanController controller) {
+
+        System.out.println();
+        System.out.println("=== DAFTAR ALAT CAMPING ===");
 
         if (controller.getDaftarAlat().isEmpty()) {
+
             System.out.println("Belum ada data alat.");
             return;
         }
 
-        System.out.println("\n=== DAFTAR ALAT CAMPING ===");
+        int nomor = 1;
 
-        for (int i = 0;
-             i < controller.getDaftarAlat().size();
-             i++) {
+        for (AlatKemping alat :
+                controller.getDaftarAlat()) {
 
-            System.out.println("\nData ke-" + (i + 1));
+            System.out.println();
+            System.out.println("Data ke-" + nomor);
 
-            AlatKemping alat =
-                    controller.getDaftarAlat().get(i);
-
-            // POLYMORPHISM
+            // Polymorphism overriding
             alat.tampilkanInfo();
+
+            nomor++;
         }
     }
 
-    private void ubahAlat(
-            PenyewaanController controller) {
+    private void ubahAlat(PenyewaanController controller) {
 
         lihatAlat(controller);
 
@@ -183,7 +194,7 @@ public class MenuView {
         }
 
         int nomor =
-                inputInt("Nomor data yang diubah: ");
+                inputIntPositive("Pilih nomor alat: ");
 
         int index = nomor - 1;
 
@@ -216,7 +227,9 @@ public class MenuView {
         if (alat instanceof Tenda) {
 
             int kapasitas =
-                    inputIntPositive("Kapasitas baru: ");
+                    inputIntPositive(
+                            "Kapasitas tenda baru: "
+                    );
 
             controller.ubahTenda(
                     index,
@@ -225,20 +238,23 @@ public class MenuView {
 
         } else if (alat instanceof AlatMasak) {
 
-            String bahan =
-                    inputString("Bahan bakar baru: ");
+            String bahanBakar =
+                    inputString(
+                            "Jenis bahan bakar baru: "
+                    );
 
             controller.ubahAlatMasak(
                     index,
-                    bahan
+                    bahanBakar
             );
         }
 
-        System.out.println("Data alat berhasil diubah.");
+        System.out.println(
+                "Data alat berhasil diubah."
+        );
     }
 
-    private void hapusAlat(
-            PenyewaanController controller) {
+    private void hapusAlat(PenyewaanController controller) {
 
         lihatAlat(controller);
 
@@ -247,26 +263,25 @@ public class MenuView {
         }
 
         int nomor =
-                inputInt("Nomor data yang dihapus: ");
+                inputIntPositive("Pilih nomor alat: ");
 
         int index = nomor - 1;
 
-        if (index >= 0 &&
-            index < controller.getDaftarAlat().size()) {
-
-            controller.hapusAlat(index);
-
-            System.out.println("Data alat berhasil dihapus.");
-
-        } else {
+        if (index < 0 ||
+            index >= controller.getDaftarAlat().size()) {
 
             System.out.println("Data tidak ditemukan.");
+            return;
         }
+
+        controller.hapusAlat(index);
+
+        System.out.println(
+                "Data alat berhasil dihapus."
+        );
     }
 
-    // =========================
-    // MENU PENYEWA
-    // =========================
+ // MENU PENYEWA
 
     private void menuPenyewa(
             PenyewaanController controller) {
@@ -274,14 +289,17 @@ public class MenuView {
         int pilihan;
 
         do {
-            System.out.println("\n=== MENU PENYEWA ===");
+
+            System.out.println();
+            System.out.println("=== MENU PENYEWA ===");
             System.out.println("1. Tambah Penyewa");
             System.out.println("2. Lihat Penyewa");
             System.out.println("3. Ubah Penyewa");
             System.out.println("4. Hapus Penyewa");
             System.out.println("0. Kembali");
 
-            pilihan = inputInt("Pilih menu: ");
+            pilihan =
+                    inputInt("Pilih menu: ");
 
             switch (pilihan) {
 
@@ -305,7 +323,9 @@ public class MenuView {
                     break;
 
                 default:
-                    System.out.println("Pilihan tidak tersedia.");
+                    System.out.println(
+                            "Menu tidak tersedia."
+                    );
             }
 
         } while (pilihan != 0);
@@ -329,28 +349,37 @@ public class MenuView {
                 alamat
         );
 
-        System.out.println("Data penyewa berhasil ditambahkan.");
+        System.out.println(
+                "Data penyewa berhasil ditambahkan."
+        );
     }
 
     private void lihatPenyewa(
             PenyewaanController controller) {
 
+        System.out.println();
+        System.out.println("=== DAFTAR PENYEWA ===");
+
         if (controller.getDaftarPenyewa().isEmpty()) {
-            System.out.println("Belum ada data penyewa.");
+
+            System.out.println(
+                    "Belum ada data penyewa."
+            );
+
             return;
         }
 
-        System.out.println("\n=== DAFTAR PENYEWA ===");
+        int nomor = 1;
 
-        for (int i = 0;
-             i < controller.getDaftarPenyewa().size();
-             i++) {
+        for (Penyewa penyewa :
+                controller.getDaftarPenyewa()) {
 
-            System.out.println("\nData ke-" + (i + 1));
+            System.out.println();
+            System.out.println("Data ke-" + nomor);
 
-            controller.getDaftarPenyewa()
-                    .get(i)
-                    .tampilkanInfo();
+            penyewa.tampilkanInfo();
+
+            nomor++;
         }
     }
 
@@ -364,14 +393,19 @@ public class MenuView {
         }
 
         int nomor =
-                inputInt("Nomor data yang diubah: ");
+                inputIntPositive(
+                        "Pilih nomor penyewa: "
+                );
 
         int index = nomor - 1;
 
         if (index < 0 ||
             index >= controller.getDaftarPenyewa().size()) {
 
-            System.out.println("Data tidak ditemukan.");
+            System.out.println(
+                    "Data tidak ditemukan."
+            );
+
             return;
         }
 
@@ -391,7 +425,9 @@ public class MenuView {
                 alamat
         );
 
-        System.out.println("Data penyewa berhasil diubah.");
+        System.out.println(
+                "Data penyewa berhasil diubah."
+        );
     }
 
     private void hapusPenyewa(
@@ -404,26 +440,32 @@ public class MenuView {
         }
 
         int nomor =
-                inputInt("Nomor data yang dihapus: ");
+                inputIntPositive(
+                        "Pilih nomor penyewa: "
+                );
 
         int index = nomor - 1;
 
-        if (index >= 0 &&
-            index < controller.getDaftarPenyewa().size()) {
+        if (index < 0 ||
+            index >= controller.getDaftarPenyewa().size()) {
 
-            controller.hapusPenyewa(index);
+            System.out.println(
+                    "Data tidak ditemukan."
+            );
 
-            System.out.println("Data penyewa berhasil dihapus.");
-
-        } else {
-
-            System.out.println("Data tidak ditemukan.");
+            return;
         }
+
+        controller.hapusPenyewa(index);
+
+        System.out.println(
+                "Data penyewa berhasil dihapus."
+        );
     }
 
-    // =========================
+    // ==================================
     // MENU SEWA
-    // =========================
+    // ==================================
 
     private void menuSewa(
             PenyewaanController controller) {
@@ -431,14 +473,17 @@ public class MenuView {
         int pilihan;
 
         do {
-            System.out.println("\n=== MENU SEWA ===");
+
+            System.out.println();
+            System.out.println("=== MENU SEWA ===");
             System.out.println("1. Tambah Sewa");
             System.out.println("2. Lihat Sewa");
             System.out.println("3. Ubah Sewa");
             System.out.println("4. Hapus Sewa");
             System.out.println("0. Kembali");
 
-            pilihan = inputInt("Pilih menu: ");
+            pilihan =
+                    inputInt("Pilih menu: ");
 
             switch (pilihan) {
 
@@ -462,7 +507,9 @@ public class MenuView {
                     break;
 
                 default:
-                    System.out.println("Pilihan tidak tersedia.");
+                    System.out.println(
+                            "Menu tidak tersedia."
+                    );
             }
 
         } while (pilihan != 0);
@@ -475,47 +522,60 @@ public class MenuView {
                 inputString("Nama penyewa: ");
 
         String namaAlat =
-                inputString("Nama alat yang disewa: ");
+                inputString(
+                        "Nama alat yang disewa: "
+                );
 
-        String tanggal =
+        String tanggalSewa =
                 inputString("Tanggal sewa: ");
 
-        int lama =
-                inputIntPositive("Lama sewa (hari): ");
+        int lamaSewa =
+                inputIntPositive(
+                        "Lama sewa (hari): "
+                );
 
-        double total =
+        double totalHarga =
                 inputDouble("Total harga: ");
 
         controller.tambahSewa(
                 namaPenyewa,
                 namaAlat,
-                tanggal,
-                lama,
-                total
+                tanggalSewa,
+                lamaSewa,
+                totalHarga
         );
 
-        System.out.println("Data sewa berhasil ditambahkan.");
+        System.out.println(
+                "Data sewa berhasil ditambahkan."
+        );
     }
 
     private void lihatSewa(
             PenyewaanController controller) {
 
+        System.out.println();
+        System.out.println("=== DAFTAR SEWA ===");
+
         if (controller.getDaftarSewa().isEmpty()) {
-            System.out.println("Belum ada data sewa.");
+
+            System.out.println(
+                    "Belum ada data sewa."
+            );
+
             return;
         }
 
-        System.out.println("\n=== DAFTAR SEWA ===");
+        int nomor = 1;
 
-        for (int i = 0;
-             i < controller.getDaftarSewa().size();
-             i++) {
+        for (Sewa sewa :
+                controller.getDaftarSewa()) {
 
-            System.out.println("\nData ke-" + (i + 1));
+            System.out.println();
+            System.out.println("Data ke-" + nomor);
 
-            controller.getDaftarSewa()
-                    .get(i)
-                    .tampilkanInfo();
+            sewa.tampilkanInfo();
+
+            nomor++;
         }
     }
 
@@ -529,14 +589,19 @@ public class MenuView {
         }
 
         int nomor =
-                inputInt("Nomor data yang diubah: ");
+                inputIntPositive(
+                        "Pilih nomor sewa: "
+                );
 
         int index = nomor - 1;
 
         if (index < 0 ||
             index >= controller.getDaftarSewa().size()) {
 
-            System.out.println("Data tidak ditemukan.");
+            System.out.println(
+                    "Data tidak ditemukan."
+            );
+
             return;
         }
 
@@ -544,27 +609,37 @@ public class MenuView {
                 inputString("Nama penyewa baru: ");
 
         String namaAlat =
-                inputString("Nama alat baru: ");
+                inputString(
+                        "Nama alat baru: "
+                );
 
-        String tanggal =
-                inputString("Tanggal sewa baru: ");
+        String tanggalSewa =
+                inputString(
+                        "Tanggal sewa baru: "
+                );
 
-        int lama =
-                inputIntPositive("Lama sewa baru: ");
+        int lamaSewa =
+                inputIntPositive(
+                        "Lama sewa baru: "
+                );
 
-        double total =
-                inputDouble("Total harga baru: ");
+        double totalHarga =
+                inputDouble(
+                        "Total harga baru: "
+                );
 
         controller.ubahSewa(
                 index,
                 namaPenyewa,
                 namaAlat,
-                tanggal,
-                lama,
-                total
+                tanggalSewa,
+                lamaSewa,
+                totalHarga
         );
 
-        System.out.println("Data sewa berhasil diubah.");
+        System.out.println(
+                "Data sewa berhasil diubah."
+        );
     }
 
     private void hapusSewa(
@@ -577,26 +652,32 @@ public class MenuView {
         }
 
         int nomor =
-                inputInt("Nomor data yang dihapus: ");
+                inputIntPositive(
+                        "Pilih nomor sewa: "
+                );
 
         int index = nomor - 1;
 
-        if (index >= 0 &&
-            index < controller.getDaftarSewa().size()) {
+        if (index < 0 ||
+            index >= controller.getDaftarSewa().size()) {
 
-            controller.hapusSewa(index);
+            System.out.println(
+                    "Data tidak ditemukan."
+            );
 
-            System.out.println("Data sewa berhasil dihapus.");
-
-        } else {
-
-            System.out.println("Data tidak ditemukan.");
+            return;
         }
+
+        controller.hapusSewa(index);
+
+        System.out.println(
+                "Data sewa berhasil dihapus."
+        );
     }
 
-    // =========================
-    // VALIDASI
-    // =========================
+    // ==================================
+    // VALIDASI INPUT
+    // ==================================
 
     private String inputString(String pesan) {
 
@@ -604,14 +685,15 @@ public class MenuView {
 
             System.out.print(pesan);
 
-            String data =
-                    input.nextLine().trim();
+            String nilai = input.nextLine();
 
-            if (!data.isEmpty()) {
-                return data;
+            if (!nilai.trim().isEmpty()) {
+                return nilai;
             }
 
-            System.out.println("Input tidak boleh kosong.");
+            System.out.println(
+                    "Input tidak boleh kosong."
+            );
         }
     }
 
@@ -619,9 +701,9 @@ public class MenuView {
 
         while (true) {
 
-            try {
+            System.out.print(pesan);
 
-                System.out.print(pesan);
+            try {
 
                 return Integer.parseInt(
                         input.nextLine()
@@ -672,21 +754,21 @@ public class MenuView {
 
         while (true) {
 
-            try {
+            System.out.print(pesan);
 
-                System.out.print(pesan);
+            try {
 
                 double nilai =
                         Double.parseDouble(
                                 input.nextLine()
                         );
 
-                if (nilai > 0) {
+                if (nilai >= 0) {
                     return nilai;
                 }
 
                 System.out.println(
-                        "Nilai harus lebih dari 0."
+                        "Nilai tidak boleh negatif."
                 );
 
             } catch (NumberFormatException e) {

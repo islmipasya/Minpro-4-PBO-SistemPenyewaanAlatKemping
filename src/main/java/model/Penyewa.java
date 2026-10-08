@@ -37,6 +37,7 @@ public class Penyewa {
     }
 
     public void tampilkanInfo() {
+
         System.out.println("Nama       : " + nama);
         System.out.println("No Telepon : " + noTelepon);
         System.out.println("Alamat     : " + alamat);

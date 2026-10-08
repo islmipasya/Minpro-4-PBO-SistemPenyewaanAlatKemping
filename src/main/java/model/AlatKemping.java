@@ -1,6 +1,6 @@
 package model;
 
-public class AlatKemping {
+public abstract class AlatKemping implements DapatDisewa {
 
     private String namaAlat;
     private double hargaSewa;
@@ -36,9 +36,16 @@ public class AlatKemping {
         this.stok = stok;
     }
 
-    public void tampilkanInfo() {
-        System.out.println("Nama Alat  : " + namaAlat);
-        System.out.println("Harga Sewa : " + hargaSewa);
-        System.out.println("Stok       : " + stok);
+    // Abstract method
+    public abstract void tampilkanInfo();
+
+    // Overloading pertama
+    public double hitungHargaSewa(int lamaSewa) {
+        return hargaSewa * lamaSewa;
+    }
+
+    // Overloading kedua
+    public double hitungHargaSewa(int lamaSewa, int jumlah) {
+        return hargaSewa * lamaSewa * jumlah;
     }
 }

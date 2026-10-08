@@ -4,8 +4,9 @@ public class AlatMasak extends AlatKemping {
 
     private String jenisBahanBakar;
 
-    public AlatMasak(String namaAlat, double hargaSewa, int stok,
-                     String jenisBahanBakar) {
+    public AlatMasak(String namaAlat, double hargaSewa,
+                     int stok, String jenisBahanBakar) {
+
         super(namaAlat, hargaSewa, stok);
         this.jenisBahanBakar = jenisBahanBakar;
     }
@@ -18,12 +19,21 @@ public class AlatMasak extends AlatKemping {
         this.jenisBahanBakar = jenisBahanBakar;
     }
 
+    // Overriding
     @Override
     public void tampilkanInfo() {
+
         System.out.println("Nama Alat   : " + getNamaAlat());
         System.out.println("Jenis       : Alat Masak");
         System.out.println("Harga Sewa  : " + getHargaSewa());
         System.out.println("Stok        : " + getStok());
         System.out.println("Bahan Bakar : " + jenisBahanBakar);
+    }
+
+    // Implementasi interface
+    @Override
+    public double hitungTotalSewa(int lamaSewa) {
+
+        return getHargaSewa() * lamaSewa;
     }
 }

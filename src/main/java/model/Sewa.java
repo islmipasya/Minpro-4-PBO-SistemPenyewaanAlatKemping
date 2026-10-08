@@ -8,8 +8,10 @@ public class Sewa {
     private int lamaSewa;
     private double totalHarga;
 
-    public Sewa(String namaPenyewa, String namaAlat,
-                String tanggalSewa, int lamaSewa,
+    public Sewa(String namaPenyewa,
+                String namaAlat,
+                String tanggalSewa,
+                int lamaSewa,
                 double totalHarga) {
 
         this.namaPenyewa = namaPenyewa;
@@ -60,6 +62,7 @@ public class Sewa {
     }
 
     public void tampilkanInfo() {
+
         System.out.println("Nama Penyewa : " + namaPenyewa);
         System.out.println("Nama Alat    : " + namaAlat);
         System.out.println("Tanggal Sewa : " + tanggalSewa);

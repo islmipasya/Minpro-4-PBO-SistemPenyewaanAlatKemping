@@ -23,8 +23,6 @@ public class PenyewaanController {
         dataAwal();
     }
 
-    // DATA DUMMY
-
     private void dataAwal() {
 
         daftarAlat.add(
@@ -55,7 +53,7 @@ public class PenyewaanController {
 
         daftarSewa.add(
             new Sewa(
-                "Pasya",
+                "Yuda",
                 "Tenda Dome",
                 "22-09-2026",
                 2,
@@ -64,7 +62,9 @@ public class PenyewaanController {
         );
     }
 
+    // =========================
     // ALAT
+    // =========================
 
     public ArrayList<AlatKemping> getDaftarAlat() {
         return daftarAlat;

@@ -3,6 +3,7 @@ model\AlatMasak.class
 model\Sewa.class
 model\Tenda.class
 view\MenuView.class
+model\DapatDisewa.class
 model\AlatKemping.class
 main\main.class
 model\Penyewa.class
