@@ -2,11 +2,27 @@ package model;
 
 public class Sewa {
 
+    private int id;
     private String namaPenyewa;
     private String namaAlat;
     private String tanggalSewa;
     private int lamaSewa;
     private double totalHarga;
+
+    public Sewa(int id,
+                String namaPenyewa,
+                String namaAlat,
+                String tanggalSewa,
+                int lamaSewa,
+                double totalHarga) {
+
+        this.id = id;
+        this.namaPenyewa = namaPenyewa;
+        this.namaAlat = namaAlat;
+        this.tanggalSewa = tanggalSewa;
+        this.lamaSewa = lamaSewa;
+        this.totalHarga = totalHarga;
+    }
 
     public Sewa(String namaPenyewa,
                 String namaAlat,
@@ -14,11 +30,16 @@ public class Sewa {
                 int lamaSewa,
                 double totalHarga) {
 
-        this.namaPenyewa = namaPenyewa;
-        this.namaAlat = namaAlat;
-        this.tanggalSewa = tanggalSewa;
-        this.lamaSewa = lamaSewa;
-        this.totalHarga = totalHarga;
+        this(0, namaPenyewa, namaAlat,
+             tanggalSewa, lamaSewa, totalHarga);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNamaPenyewa() {

@@ -1,64 +1,38 @@
 package controller;
 
+import dao.AlatDAO;
+import dao.AlatDAOImpl;
+import dao.PenyewaDAO;
+import dao.PenyewaDAOImpl;
+import dao.SewaDAO;
+import dao.SewaDAOImpl;
 import model.AlatKemping;
-import model.Tenda;
 import model.AlatMasak;
 import model.Penyewa;
 import model.Sewa;
+import model.Tenda;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PenyewaanController {
 
-    private ArrayList<AlatKemping> daftarAlat;
-    private ArrayList<Penyewa> daftarPenyewa;
-    private ArrayList<Sewa> daftarSewa;
+    private AlatDAO alatDAO;
+    private PenyewaDAO penyewaDAO;
+    private SewaDAO sewaDAO;
 
     public PenyewaanController() {
 
-        daftarAlat = new ArrayList<>();
-        daftarPenyewa = new ArrayList<>();
-        daftarSewa = new ArrayList<>();
-
-        dataAwal();
+        alatDAO = new AlatDAOImpl();
+        penyewaDAO = new PenyewaDAOImpl();
+        sewaDAO = new SewaDAOImpl();
     }
 
-    private void dataAwal() {
+    private void tampilkanError(String aksi, SQLException e) {
 
-        daftarAlat.add(
-            new Tenda(
-                "Tenda Dome",
-                50000,
-                5,
-                4
-            )
-        );
-
-        daftarAlat.add(
-            new AlatMasak(
-                "Kompor Portable",
-                30000,
-                3,
-                "Gas"
-            )
-        );
-
-        daftarPenyewa.add(
-            new Penyewa(
-                "Pasya",
-                "081234567890",
-                "Samarinda"
-            )
-        );
-
-        daftarSewa.add(
-            new Sewa(
-                "Yuda",
-                "Tenda Dome",
-                "22-09-2026",
-                2,
-                100000
-            )
+        System.out.println(
+                "Gagal " + aksi + ": " + e.getMessage()
         );
     }
 
@@ -66,94 +40,100 @@ public class PenyewaanController {
     // ALAT
     // =========================
 
-    public ArrayList<AlatKemping> getDaftarAlat() {
-        return daftarAlat;
+    public List<AlatKemping> getDaftarAlat() {
+
+        try {
+            return alatDAO.getAll();
+
+        } catch (SQLException e) {
+            tampilkanError("mengambil data alat", e);
+            return new ArrayList<>();
+        }
     }
 
-    public void tambahTenda(
+    public boolean tambahTenda(
             String nama,
             double harga,
             int stok,
             int kapasitas) {
 
-        daftarAlat.add(
-            new Tenda(
-                nama,
-                harga,
-                stok,
-                kapasitas
-            )
-        );
+        try {
+            alatDAO.insert(
+                    new Tenda(nama, harga, stok, kapasitas)
+            );
+            return true;
+
+        } catch (SQLException e) {
+            tampilkanError("menambah tenda", e);
+            return false;
+        }
     }
 
-    public void tambahAlatMasak(
+    public boolean tambahAlatMasak(
             String nama,
             double harga,
             int stok,
             String bahanBakar) {
 
-        daftarAlat.add(
-            new AlatMasak(
-                nama,
-                harga,
-                stok,
-                bahanBakar
-            )
-        );
+        try {
+            alatDAO.insert(
+                    new AlatMasak(nama, harga, stok, bahanBakar)
+            );
+            return true;
+
+        } catch (SQLException e) {
+            tampilkanError("menambah alat masak", e);
+            return false;
+        }
     }
 
-    public void ubahAlat(
-            int index,
+    public boolean ubahTenda(
+            int id,
             String nama,
             double harga,
-            int stok) {
-
-        if (index >= 0 && index < daftarAlat.size()) {
-
-            AlatKemping alat = daftarAlat.get(index);
-
-            alat.setNamaAlat(nama);
-            alat.setHargaSewa(harga);
-            alat.setStok(stok);
-        }
-    }
-
-    public void ubahTenda(
-            int index,
+            int stok,
             int kapasitas) {
 
-        if (index >= 0 &&
-            index < daftarAlat.size() &&
-            daftarAlat.get(index) instanceof Tenda) {
+        try {
+            alatDAO.update(
+                    new Tenda(id, nama, harga, stok, kapasitas)
+            );
+            return true;
 
-            Tenda tenda =
-                    (Tenda) daftarAlat.get(index);
-
-            tenda.setKapasitas(kapasitas);
+        } catch (SQLException e) {
+            tampilkanError("mengubah tenda", e);
+            return false;
         }
     }
 
-    public void ubahAlatMasak(
-            int index,
+    public boolean ubahAlatMasak(
+            int id,
+            String nama,
+            double harga,
+            int stok,
             String bahanBakar) {
 
-        if (index >= 0 &&
-            index < daftarAlat.size() &&
-            daftarAlat.get(index) instanceof AlatMasak) {
+        try {
+            alatDAO.update(
+                    new AlatMasak(id, nama, harga, stok, bahanBakar)
+            );
+            return true;
 
-            AlatMasak alat =
-                    (AlatMasak) daftarAlat.get(index);
-
-            alat.setJenisBahanBakar(bahanBakar);
+        } catch (SQLException e) {
+            tampilkanError("mengubah alat masak", e);
+            return false;
         }
     }
 
-    public void hapusAlat(int index) {
+    public boolean hapusAlat(int id) {
 
-        if (index >= 0 &&
-            index < daftarAlat.size()) {
+        try {
+            alatDAO.delete(id);
+            return true;
 
-            daftarAlat.remove(index);
+        } catch (SQLException e) {
+            tampilkanError("menghapus alat", e);
+            return false;
         }
     }
 
@@ -161,48 +141,61 @@ public class PenyewaanController {
     // PENYEWA
     // =========================
 
-    public ArrayList<Penyewa> getDaftarPenyewa() {
-        return daftarPenyewa;
-    }
+    public List<Penyewa> getDaftarPenyewa() {
 
-    public void tambahPenyewa(
-            String nama,
-            String noTelepon,
-            String alamat) {
+        try {
+            return penyewaDAO.getAll();
 
-        daftarPenyewa.add(
-            new Penyewa(
-                nama,
-                noTelepon,
-                alamat
-            )
-        );
-    }
-
-    public void ubahPenyewa(
-            int index,
-            String nama,
-            String noTelepon,
-            String alamat) {
-
-        if (index >= 0 &&
-            index < daftarPenyewa.size()) {
-
-            Penyewa penyewa =
-                    daftarPenyewa.get(index);
-
-            penyewa.setNama(nama);
-            penyewa.setNoTelepon(noTelepon);
-            penyewa.setAlamat(alamat);
+        } catch (SQLException e) {
+            tampilkanError("mengambil data penyewa", e);
+            return new ArrayList<>();
         }
     }
 
-    public void hapusPenyewa(int index) {
+    public boolean tambahPenyewa(
+            String nama,
+            String noTelepon,
+            String alamat) {
 
-        if (index >= 0 &&
-            index < daftarPenyewa.size()) {
+        try {
+            penyewaDAO.insert(
+                    new Penyewa(nama, noTelepon, alamat)
+            );
+            return true;
 
-            daftarPenyewa.remove(index);
+        } catch (SQLException e) {
+            tampilkanError("menambah penyewa", e);
+            return false;
+        }
+    }
+
+    public boolean ubahPenyewa(
+            int id,
+            String nama,
+            String noTelepon,
+            String alamat) {
+
+        try {
+            penyewaDAO.update(
+                    new Penyewa(id, nama, noTelepon, alamat)
+            );
+            return true;
+
+        } catch (SQLException e) {
+            tampilkanError("mengubah penyewa", e);
+            return false;
+        }
+    }
+
+    public boolean hapusPenyewa(int id) {
+
+        try {
+            penyewaDAO.delete(id);
+            return true;
+
+        } catch (SQLException e) {
+            tampilkanError("menghapus penyewa", e);
+            return false;
         }
     }
 
@@ -210,56 +203,67 @@ public class PenyewaanController {
     // SEWA
     // =========================
 
-    public ArrayList<Sewa> getDaftarSewa() {
-        return daftarSewa;
-    }
+    public List<Sewa> getDaftarSewa() {
 
-    public void tambahSewa(
-            String namaPenyewa,
-            String namaAlat,
-            String tanggalSewa,
-            int lamaSewa,
-            double totalHarga) {
+        try {
+            return sewaDAO.getAll();
 
-        daftarSewa.add(
-            new Sewa(
-                namaPenyewa,
-                namaAlat,
-                tanggalSewa,
-                lamaSewa,
-                totalHarga
-            )
-        );
-    }
-
-    public void ubahSewa(
-            int index,
-            String namaPenyewa,
-            String namaAlat,
-            String tanggalSewa,
-            int lamaSewa,
-            double totalHarga) {
-
-        if (index >= 0 &&
-            index < daftarSewa.size()) {
-
-            Sewa sewa =
-                    daftarSewa.get(index);
-
-            sewa.setNamaPenyewa(namaPenyewa);
-            sewa.setNamaAlat(namaAlat);
-            sewa.setTanggalSewa(tanggalSewa);
-            sewa.setLamaSewa(lamaSewa);
-            sewa.setTotalHarga(totalHarga);
+        } catch (SQLException e) {
+            tampilkanError("mengambil data sewa", e);
+            return new ArrayList<>();
         }
     }
 
-    public void hapusSewa(int index) {
+    public boolean tambahSewa(
+            String namaPenyewa,
+            String namaAlat,
+            String tanggalSewa,
+            int lamaSewa,
+            double totalHarga) {
 
-        if (index >= 0 &&
-            index < daftarSewa.size()) {
+        try {
+            sewaDAO.insert(
+                    new Sewa(namaPenyewa, namaAlat,
+                             tanggalSewa, lamaSewa, totalHarga)
+            );
+            return true;
 
-            daftarSewa.remove(index);
+        } catch (SQLException e) {
+            tampilkanError("menambah sewa", e);
+            return false;
+        }
+    }
+
+    public boolean ubahSewa(
+            int id,
+            String namaPenyewa,
+            String namaAlat,
+            String tanggalSewa,
+            int lamaSewa,
+            double totalHarga) {
+
+        try {
+            sewaDAO.update(
+                    new Sewa(id, namaPenyewa, namaAlat,
+                             tanggalSewa, lamaSewa, totalHarga)
+            );
+            return true;
+
+        } catch (SQLException e) {
+            tampilkanError("mengubah sewa", e);
+            return false;
+        }
+    }
+
+    public boolean hapusSewa(int id) {
+
+        try {
+            sewaDAO.delete(id);
+            return true;
+
+        } catch (SQLException e) {
+            tampilkanError("menghapus sewa", e);
+            return false;
         }
     }
 }

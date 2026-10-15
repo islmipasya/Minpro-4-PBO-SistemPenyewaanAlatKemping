@@ -2,14 +2,29 @@ package model;
 
 public class Penyewa {
 
+    private int id;
     private String nama;
     private String noTelepon;
     private String alamat;
 
-    public Penyewa(String nama, String noTelepon, String alamat) {
+    public Penyewa(int id, String nama,
+                   String noTelepon, String alamat) {
+        this.id = id;
         this.nama = nama;
         this.noTelepon = noTelepon;
         this.alamat = alamat;
+    }
+
+    public Penyewa(String nama, String noTelepon, String alamat) {
+        this(0, nama, noTelepon, alamat);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNama() {

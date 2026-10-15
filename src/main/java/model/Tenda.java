@@ -4,11 +4,17 @@ public class Tenda extends AlatKemping {
 
     private int kapasitas;
 
+    public Tenda(int id, String namaAlat, double hargaSewa,
+                 int stok, int kapasitas) {
+
+        super(id, namaAlat, hargaSewa, stok);
+        this.kapasitas = kapasitas;
+    }
+
     public Tenda(String namaAlat, double hargaSewa,
                  int stok, int kapasitas) {
 
-        super(namaAlat, hargaSewa, stok);
-        this.kapasitas = kapasitas;
+        this(0, namaAlat, hargaSewa, stok, kapasitas);
     }
 
     public int getKapasitas() {
@@ -19,7 +25,7 @@ public class Tenda extends AlatKemping {
         this.kapasitas = kapasitas;
     }
 
-// Overriding
+    // Overriding
     @Override
     public void tampilkanInfo() {
 
@@ -30,7 +36,7 @@ public class Tenda extends AlatKemping {
         System.out.println("Kapasitas  : " + kapasitas + " orang");
     }
 
-// Implementasi interface
+    // Implementasi interface
     @Override
     public double hitungTotalSewa(int lamaSewa) {
 

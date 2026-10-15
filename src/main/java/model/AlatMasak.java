@@ -4,11 +4,17 @@ public class AlatMasak extends AlatKemping {
 
     private String jenisBahanBakar;
 
+    public AlatMasak(int id, String namaAlat, double hargaSewa,
+                     int stok, String jenisBahanBakar) {
+
+        super(id, namaAlat, hargaSewa, stok);
+        this.jenisBahanBakar = jenisBahanBakar;
+    }
+
     public AlatMasak(String namaAlat, double hargaSewa,
                      int stok, String jenisBahanBakar) {
 
-        super(namaAlat, hargaSewa, stok);
-        this.jenisBahanBakar = jenisBahanBakar;
+        this(0, namaAlat, hargaSewa, stok, jenisBahanBakar);
     }
 
     public String getJenisBahanBakar() {

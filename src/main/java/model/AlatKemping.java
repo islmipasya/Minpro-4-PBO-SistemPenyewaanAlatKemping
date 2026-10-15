@@ -2,14 +2,31 @@ package model;
 
 public abstract class AlatKemping implements DapatDisewa {
 
+    private int id;
     private String namaAlat;
     private double hargaSewa;
     private int stok;
 
-    public AlatKemping(String namaAlat, double hargaSewa, int stok) {
+    // Constructor dengan id (dipakai saat data dibaca dari database)
+    public AlatKemping(int id, String namaAlat,
+                       double hargaSewa, int stok) {
+        this.id = id;
         this.namaAlat = namaAlat;
         this.hargaSewa = hargaSewa;
         this.stok = stok;
+    }
+
+    // Constructor tanpa id (dipakai saat data baru akan disimpan)
+    public AlatKemping(String namaAlat, double hargaSewa, int stok) {
+        this(0, namaAlat, hargaSewa, stok);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNamaAlat() {
